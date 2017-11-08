@@ -35,11 +35,24 @@ namespace Slide_Code.JsonData
             }
             #endregion
 
-            Bitmap GGround = new System.Drawing.Bitmap(filename);//底图
+            System.Drawing.Image image = new System.Drawing.Bitmap(filename);
+
+            Bitmap GGround = new System.Drawing.Bitmap(image.Width, image.Height);//底图
             Bitmap GMap = new Bitmap(50, GGround.Height); //滑图
             Random r = new Random();
             int Y = r.Next(0, GGround.Height - 50);
             int X = r.Next(0, GGround.Width - 50);
+
+            var g = Graphics.FromImage(GGround);
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.SmoothingMode = SmoothingMode.HighQuality;
+            g.CompositingQuality = CompositingQuality.HighQuality;
+            g.Clear(Color.White);
+            var imgAtt = new ImageAttributes();
+            imgAtt.SetWrapMode(WrapMode.TileFlipXY);
+
+            g.DrawImage(image, new Rectangle(0, 0, image.Width, image.Height), 0, 0, image.Width, image.Height,
+                        GraphicsUnit.Pixel, imgAtt);
 
             foreach (Point p in pl)
             {
